@@ -1,6 +1,7 @@
 package dev;
 
 import dev.domain.Collegue;
+import dev.domain.Produit;
 import dev.domain.Role;
 import dev.domain.RoleCollegue;
 import dev.domain.Version;
@@ -54,6 +55,26 @@ public class StartupListener {
         col2.setMotDePasse(passwordEncoder.encode("superpass"));
         col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);
+        
+        Produit prod1 = new Produit();
+        prod1.setNomSaga("Harry Potter");
+        prod1.setNomImage("");
+        prod1.setPersonnage("Harry Potter");
+        prod1.setNomFigurine("HarryPop");
+        prod1.setTaille(20);
+        prod1.setPrix(5);
+        prod1.setDescription("aaaaaaaaaaaaaaaaaaaaaaaa");
+        prod1.setNumeroFigurine(1);
+        
+        Produit prod2 = new Produit();
+        prod2.setNomSaga("Harry Potter");
+        prod2.setNomImage("");
+        prod2.setPersonnage("Ron Wisley");
+        prod2.setNomFigurine("RonPop");
+        prod2.setTaille(20);
+        prod2.setPrix(5);
+        prod2.setDescription("bbbbbbbbbbbbbbbbbbbbbbbb");
+        prod2.setNumeroFigurine(2);
     }
 
 }
