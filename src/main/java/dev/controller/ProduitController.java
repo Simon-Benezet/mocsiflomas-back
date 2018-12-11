@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +30,22 @@ public class ProduitController {
 	}
 	
 	@Secured(value = { "ROLE_ADMINISTRATEUR" })
+	@PostMapping
+	public Produit createProduit(@RequestBody Produit ajoutProd) {
+		Produit ajPro = new Produit();
+		ajPro.setNomSaga(ajoutProd.getNomSaga());
+		ajPro.setNomImage(ajoutProd.getNomImage());
+		ajPro.setPersonnage(ajoutProd.getPersonnage());
+		ajPro.setNomFigurine(ajoutProd.getNomFigurine());
+		ajPro.setTaille(ajoutProd.getTaille());
+		ajPro.setDescription(ajoutProd.getDescription());
+		ajPro.setNumeroFigurine(ajoutProd.getNumeroFigurine());
+		this.produitRepo.save(ajPro);
+		return ajPro;
+	}
+	
+	/*
+	@Secured(value = { "ROLE_ADMINISTRATEUR" })
 	@PatchMapping
 	public Produit patchProduit(@PathVariable String nomFigurine) {
 		Produit prod = this.produitRepo.findByNomFigurine(nomFigurine);
@@ -35,4 +53,5 @@ public class ProduitController {
 		this.produitRepo.save(prod);
 		return prod;
 	}
+	*/
 }
