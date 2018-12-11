@@ -1,6 +1,8 @@
 package dev.domain;
 
 import javax.persistence.*;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -17,6 +19,12 @@ public class Collegue {
     private String email;
 
     private String motDePasse;
+    
+    private String adresse;
+    
+    private String telephone;
+    
+    private LocalDate dateDeNaissance;
 
     @OneToMany(mappedBy = "collegue", cascade = CascadeType.PERSIST)
     private List<RoleCollegue> roles;
