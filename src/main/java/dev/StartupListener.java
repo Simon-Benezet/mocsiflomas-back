@@ -6,6 +6,7 @@ import dev.domain.Role;
 import dev.domain.RoleCollegue;
 import dev.domain.Version;
 import dev.repository.CollegueRepo;
+import dev.repository.ProduitRepo;
 import dev.repository.VersionRepo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -26,12 +27,14 @@ public class StartupListener {
     private VersionRepo versionRepo;
     private PasswordEncoder passwordEncoder;
     private CollegueRepo collegueRepo;
+    private ProduitRepo produitRepo;
 
-    public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo, PasswordEncoder passwordEncoder, CollegueRepo collegueRepo) {
+    public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo, PasswordEncoder passwordEncoder, CollegueRepo collegueRepo, ProduitRepo produitRepo) {
         this.appVersion = appVersion;
         this.versionRepo = versionRepo;
         this.passwordEncoder = passwordEncoder;
         this.collegueRepo = collegueRepo;
+        this.produitRepo = produitRepo;
     }
 
     @EventListener(ContextRefreshedEvent.class)
@@ -65,6 +68,7 @@ public class StartupListener {
         prod1.setPrix(5);
         prod1.setDescription("aaaaaaaaaaaaaaaaaaaaaaaa");
         prod1.setNumeroFigurine(1);
+        this.produitRepo.save(prod1);
         
         Produit prod2 = new Produit();
         prod2.setNomSaga("Harry Potter");
@@ -75,6 +79,7 @@ public class StartupListener {
         prod2.setPrix(5);
         prod2.setDescription("bbbbbbbbbbbbbbbbbbbbbbbb");
         prod2.setNumeroFigurine(2);
+        this.produitRepo.save(prod2);
     }
 
 }
