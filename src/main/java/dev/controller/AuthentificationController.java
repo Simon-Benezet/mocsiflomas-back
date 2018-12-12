@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
+/** OK
  * WEB API d'authentification.
  *
  * Elle permet de récupérer les informations du collègue connecté.
