@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.domain.Produit;
 import dev.repository.ProduitRepo;
 
+
 @CrossOrigin
 @RestController()
 @RequestMapping()
@@ -50,8 +51,27 @@ public class ProduitController {
 	public Produit patchProduit(@PathVariable String nomFigurine) {
 		Produit prod = this.produitRepo.findByNomFigurine(nomFigurine);
 		
-		this.produitRepo.save(prod);
-		return prod;
+		
 	}
 	*/
+	
+	// Modifier Les produits 
+	@PatchMapping("/{produit}")
+    public Produit modif(@PathVariable String nomFigurine, @RequestBody Produit prod) {
+
+		Produit produit = this.produitRepo.findByNomFigurine(nomFigurine);
+
+		produit.setNomFigurine(prod.getNomFigurine());
+		produit.setNomImage(prod.getNomImage());
+		produit.setNomSaga(prod.getNomSaga());
+		produit.setNumeroFigurine(prod.getNumeroFigurine());
+		produit.setPersonnage(prod.getPersonnage());
+		produit.setPrix(prod.getPrix());
+		produit.setTaille(prod.getTaille());
+		produit.setDescription(prod.getDescription());
+		
+		this.produitRepo.save(produit);    	
+		return produit;
+	}
+	
 }
