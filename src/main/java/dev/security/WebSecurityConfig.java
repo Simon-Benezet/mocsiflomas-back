@@ -75,7 +75,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // toutes les requêtes doivent être authentifiées
                 .authorizeRequests()
-                .antMatchers("/collegue/upload/**","/images/**","/produits/**")
+                .antMatchers("/collegue/upload/**","/images/**","/produits/**","/collegue/nouveau")
                 .permitAll().anyRequest().authenticated()
                 .and()
                 // génération d'un formulaire de login
