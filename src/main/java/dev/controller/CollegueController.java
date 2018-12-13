@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.domain.Collegue;
+import dev.domain.Role;
+import dev.domain.RoleCollegue;
 import dev.repository.CollegueRepo;
 
 @RestController
@@ -35,10 +39,14 @@ public class CollegueController {
 	private CollegueRepo collegueRepo;
 
 	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
 	private ServletContext servletContext;
 
 	@GetMapping("/upload/{fileName}")
 	public ResponseEntity<InputStreamResource> returnImage(@PathVariable(name = "fileName") String fileName)throws IOException {
+			throws IOException {
 		MediaType mediaType = getMediaTypeForFileName(this.servletContext, fileName);
 		System.out.println("fileName: " + fileName);
 		System.out.println("mediaType: " + mediaType);
@@ -57,35 +65,45 @@ public class CollegueController {
 	}
 
 	@PostMapping("/upload/{fileName}")
-	public ResponseEntity<?> uplodeImage(@PathVariable(name = "fileName") String fileName,
-			@RequestBody byte[] val) {
-		try {	
-			Path path = Paths.get("C:/Temp/images/"+fileName);
+	public ResponseEntity<?> uplodeImage(@PathVariable(name = "fileName") String fileName, @RequestBody byte[] val) {
+		try {
+			Path path = Paths.get("C:/Temp/images/" + fileName);
 			Files.write(path, val);
 
-			return ResponseEntity.status(HttpStatus.OK).body("ok");
+			return ResponseEntity.status(HttpStatus.OK).body("http://localhost:8080/collegue/upload/" + fileName);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad matricule");
 		}
 	}
-
+	
+	//crée nouveau client
 	@PostMapping("/nouveau")
-	public Collegue create(@RequestBody Map<String, String> form) {
-		Collegue collegue = new Collegue();
-		collegue.setNom(form.get("nom"));
-		collegue.setPrenom(form.get("prenom"));
-		collegue.setEmail(form.get("email"));
-		collegue.setAdresse(form.get("adresse"));
-		collegue.setDateDeNaissance(LocalDate.parse(form.get("date")));
-		if (form.get("imgUrl") != null) {
-			String[] listImg = { form.get("imgUrl") };
-			collegue.setImgUrl(form.get("imgUrl"));
+	public ResponseEntity create(@RequestBody Map<String, String> form) {
+		if (!collegueRepo.findByEmail(form.get("email")).isPresent()) {
+			Collegue collegue = new Collegue();
+			collegue.setNom(form.get("nom"));
+			collegue.setPrenom(form.get("prenom"));
+			collegue.setEmail(form.get("email"));
+			collegue.setAdresse(form.get("adresse"));
+			collegue.setTelephone(form.get("phone"));
+			collegue.setMotDePasse(passwordEncoder.encode(form.get("password")));
+			collegue.setDateDeNaissance(LocalDate.parse(form.get("date")));
+			if (form.get("imgProfil") != null) {
+				collegue.setImgUrl(form.get("imgProfil"));
+			} else {
+				collegue.setImgUrl("http://myprofilart.com/bundles/myprofilart/img/profil_vide.png");
+			}
+			collegue.setRoles(Arrays.asList(new RoleCollegue(collegue, Role.ROLE_UTILISATEUR)));
+			collegueRepo.save(collegue);
+			if (collegueRepo.findByEmail(collegue.getEmail()) != null) {
+				return ResponseEntity.status(HttpStatus.OK).body("Compte client céer");
+			} else {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec enregistrement");
+			}
 		} else {
-			collegue.setImgUrl("http://myprofilart.com/bundles/myprofilart/img/profil_vide.png");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email deja existant");
 		}
-		collegueRepo.save(collegue);
-		return collegue;
 	}
 
 	public static MediaType getMediaTypeForFileName(ServletContext servletContext, String fileName) {
