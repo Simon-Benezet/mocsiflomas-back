@@ -27,8 +27,6 @@ public class ProduitController {
 
 	@Autowired
 	private ProduitRepo produitRepo;
-	@Autowired
-	private Recherche rech;
 	
 	@GetMapping("/produits")
 	public List<Produit> findAll() {
