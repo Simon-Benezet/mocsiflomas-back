@@ -1,6 +1,8 @@
 package dev.domain;
 
 import javax.persistence.*;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -17,6 +19,14 @@ public class Collegue {
     private String email;
 
     private String motDePasse;
+    
+    private String adresse;
+    
+    private String telephone;
+    
+    private LocalDate dateDeNaissance;
+    
+    private String imgUrl;
 
     @OneToMany(mappedBy = "collegue", cascade = CascadeType.PERSIST)
     private List<RoleCollegue> roles;
@@ -68,4 +78,38 @@ public class Collegue {
     public void setPrenom(String prenom) {
         this.prenom = prenom;
     }
+
+	public String getAdresse() {
+		return adresse;
+	}
+
+	public void setAdresse(String adresse) {
+		this.adresse = adresse;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+
+	public LocalDate getDateDeNaissance() {
+		return dateDeNaissance;
+	}
+
+	public void setDateDeNaissance(LocalDate dateDeNaissance) {
+		this.dateDeNaissance = dateDeNaissance;
+	}
+
+	public String getImgUrl() {
+		return imgUrl;
+	}
+
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
+	}
+    
+    
 }
