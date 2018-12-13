@@ -1,3 +1,4 @@
+
 package dev.controller;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class ProduitController {
 	@Autowired
 	private ProduitRepo produitRepo;
 	
-	@GetMapping
+	@GetMapping("/produits")
 	public List<Produit> findAll() {
 		return this.produitRepo.findAll();
 	}
