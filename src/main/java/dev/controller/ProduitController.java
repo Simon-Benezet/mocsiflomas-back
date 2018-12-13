@@ -25,7 +25,7 @@ public class ProduitController {
 	@Autowired
 	private ProduitRepo produitRepo;
 	
-	@GetMapping
+	@GetMapping("/produits")
 	public List<Produit> findAll() {
 		return this.produitRepo.findAll();
 	}
@@ -44,16 +44,6 @@ public class ProduitController {
 		this.produitRepo.save(ajPro);
 		return ajPro;
 	}
-	
-	/*
-	@Secured(value = { "ROLE_ADMINISTRATEUR" })
-	@PatchMapping
-	public Produit patchProduit(@PathVariable String nomFigurine) {
-		Produit prod = this.produitRepo.findByNomFigurine(nomFigurine);
-		
-		
-	}
-	*/
 	
 	// Modifier Les produits 
 	@PatchMapping("/{produit}")
