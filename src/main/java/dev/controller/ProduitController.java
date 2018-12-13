@@ -57,7 +57,7 @@ public class ProduitController {
 	*/
 	
 	// Modifier Les produits 
-	@PatchMapping("/{produit}")
+	@PatchMapping("/{modif-produit}")
     public Produit modif(@PathVariable String nomFigurine, @RequestBody Produit prod) {
 
 		Produit produit = this.produitRepo.findByNomFigurine(nomFigurine);
@@ -74,5 +74,14 @@ public class ProduitController {
 		this.produitRepo.save(produit);    	
 		return produit;
 	}
+	
+	@GetMapping("/{nomFigurine}")
+
+	public Produit trouverProd(@PathVariable String nomFigurine) {
+		Produit coco = this.produitRepo.findByNomFigurine(nomFigurine);
+		return coco;
+	}
+	
+	
 	
 }
