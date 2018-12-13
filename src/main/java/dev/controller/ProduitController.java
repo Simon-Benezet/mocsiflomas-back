@@ -1,6 +1,6 @@
-
 package dev.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.domain.Produit;
 import dev.repository.ProduitRepo;
+import services.Recherche;
 
 
 @CrossOrigin
@@ -25,6 +27,8 @@ public class ProduitController {
 
 	@Autowired
 	private ProduitRepo produitRepo;
+	@Autowired
+	private Recherche rech;
 	
 	@GetMapping("/produits")
 	public List<Produit> findAll() {
@@ -45,16 +49,6 @@ public class ProduitController {
 		this.produitRepo.save(ajPro);
 		return ajPro;
 	}
-	
-	/*
-	@Secured(value = { "ROLE_ADMINISTRATEUR" })
-	@PatchMapping
-	public Produit patchProduit(@PathVariable String nomFigurine) {
-		Produit prod = this.produitRepo.findByNomFigurine(nomFigurine);
-		
-		
-	}
-	*/
 	
 	// Modifier Les produits 
 	@PatchMapping("/{modif-produit}")
@@ -80,6 +74,34 @@ public class ProduitController {
 	public Produit trouverProd(@PathVariable String nomFigurine) {
 		Produit coco = this.produitRepo.findByNomFigurine(nomFigurine);
 		return coco;
+	}
+	
+	//filtre 
+	@GetMapping("/recherche")
+	public List<Produit> recherche(@RequestParam String nomSaga, @RequestParam String personnage) {
+		
+		//Recherche solo la saga
+		
+		if (!nomSaga.isEmpty() && personnage.isEmpty()) {
+		return	produitRepo.findAll(Recherche.triSaga(nomSaga));
+			
+		}
+		
+		//recherche solo le personnage
+		if (nomSaga.isEmpty() && !personnage.isEmpty()) {
+			return produitRepo.findAll(Recherche.triPersonnage(personnage));
+		}
+		//recherche les deux 
+		if (!nomSaga.isEmpty() && !personnage.isEmpty()) {
+			List<Produit> l = new ArrayList<Produit>(); 
+			l.addAll(produitRepo.findAll(Recherche.triPersonnage(personnage)));
+			l.addAll(produitRepo.findAll(Recherche.triSaga(nomSaga)));
+			return l;
+		}
+		else {
+			return null;
+		}
+		
 	}
 	
 	
