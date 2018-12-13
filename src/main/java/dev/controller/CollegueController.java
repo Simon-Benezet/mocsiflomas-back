@@ -45,6 +45,7 @@ public class CollegueController {
 	private ServletContext servletContext;
 
 	@GetMapping("/upload/{fileName}")
+	public ResponseEntity<InputStreamResource> returnImage(@PathVariable(name = "fileName") String fileName)
 			throws IOException {
 		MediaType mediaType = getMediaTypeForFileName(this.servletContext, fileName);
 		System.out.println("fileName: " + fileName);
