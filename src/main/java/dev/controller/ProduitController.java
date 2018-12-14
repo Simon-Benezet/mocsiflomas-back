@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> d0128ea22535ce1e64e9d3ffe3bfee078b8cb85f
 package dev.controller;
 
 import java.util.ArrayList;
@@ -31,8 +27,6 @@ public class ProduitController {
 
 	@Autowired
 	private ProduitRepo produitRepo;
-	@Autowired
-	private Recherche rech;
 	
 	@GetMapping("/produits")
 	public List<Produit> findAll() {
@@ -90,6 +84,7 @@ public class ProduitController {
 		return	produitRepo.findAll(Recherche.triSaga(nomSaga));
 			
 		}
+		
 		
 		//recherche solo le personnage
 		if (nomSaga.isEmpty() && !personnage.isEmpty()) {
