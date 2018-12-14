@@ -19,7 +19,6 @@ import dev.domain.Produit;
 import dev.repository.ProduitRepo;
 import services.Recherche;
 
-
 @CrossOrigin
 @RestController()
 @RequestMapping()
@@ -27,14 +26,12 @@ public class ProduitController {
 
 	@Autowired
 	private ProduitRepo produitRepo;
-	@Autowired
-	private Recherche rech;
-	
+
 	@GetMapping("/produits")
 	public List<Produit> findAll() {
 		return this.produitRepo.findAll();
 	}
-	
+
 	@Secured(value = { "ROLE_ADMINISTRATEUR" })
 	@PostMapping
 	public Produit createProduit(@RequestBody Produit ajoutProd) {
@@ -49,61 +46,54 @@ public class ProduitController {
 		this.produitRepo.save(ajPro);
 		return ajPro;
 	}
-	
-	// Modifier Les produits 
-	@PatchMapping("/{modif-produit}")
-    public Produit modif(@PathVariable String nomFigurine, @RequestBody Produit prod) {
 
+	// Modifier Les produits
+	@Secured(value = { "ROLE_ADMINISTRATEUR" })
+	@PatchMapping("/{nomFigurine}")
+	public Produit modif(@PathVariable String nomFigurine, @RequestBody Produit prod) {
 		Produit produit = this.produitRepo.findByNomFigurine(nomFigurine);
-
 		produit.setNomFigurine(prod.getNomFigurine());
 		produit.setNomImage(prod.getNomImage());
 		produit.setNomSaga(prod.getNomSaga());
 		produit.setNumeroFigurine(prod.getNumeroFigurine());
 		produit.setPersonnage(prod.getPersonnage());
-		produit.setPrix(prod.getPrix());
 		produit.setTaille(prod.getTaille());
 		produit.setDescription(prod.getDescription());
-		
-		this.produitRepo.save(produit);    	
+		this.produitRepo.save(produit);
 		return produit;
 	}
-	
-	@GetMapping("/{nomFigurine}")
 
+	@GetMapping("/{nomFigurine}")
 	public Produit trouverProd(@PathVariable String nomFigurine) {
 		Produit coco = this.produitRepo.findByNomFigurine(nomFigurine);
 		return coco;
 	}
-	
-	//filtre 
+
+	// filtre
 	@GetMapping("/recherche")
 	public List<Produit> recherche(@RequestParam String nomSaga, @RequestParam String personnage) {
-		
-		//Recherche solo la saga
-		
+
+		// Recherche solo la saga
+
 		if (!nomSaga.isEmpty() && personnage.isEmpty()) {
-		return	produitRepo.findAll(Recherche.triSaga(nomSaga));
-			
+			return produitRepo.findAll(Recherche.triSaga(nomSaga));
+
 		}
-		
-		//recherche solo le personnage
+
+		// recherche solo le personnage
 		if (nomSaga.isEmpty() && !personnage.isEmpty()) {
 			return produitRepo.findAll(Recherche.triPersonnage(personnage));
 		}
-		//recherche les deux 
+		// recherche les deux
 		if (!nomSaga.isEmpty() && !personnage.isEmpty()) {
-			List<Produit> l = new ArrayList<Produit>(); 
+			List<Produit> l = new ArrayList<Produit>();
 			l.addAll(produitRepo.findAll(Recherche.triPersonnage(personnage)));
 			l.addAll(produitRepo.findAll(Recherche.triSaga(nomSaga)));
 			return l;
-		}
-		else {
+		} else {
 			return null;
 		}
-		
+
 	}
-	
-	
-	
+
 }
