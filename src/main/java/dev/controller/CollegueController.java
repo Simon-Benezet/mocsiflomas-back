@@ -80,8 +80,8 @@ public class CollegueController extends AbstractController{
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad matricule");
 		}
 	}
-	
-	//crée nouveau client
+
+	// crée nouveau client
 	@PostMapping("/nouveau")
 	public void create(@RequestBody Map<String, String> form) throws FunctionalException{
 		if (!collegueRepo.findByEmail(form.get("email")).isPresent()) {
