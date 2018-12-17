@@ -76,8 +76,8 @@ public class CollegueController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad matricule");
 		}
 	}
-	
-	//crée nouveau client
+
+	// crée nouveau client
 	@PostMapping("/nouveau")
 	public ResponseEntity create(@RequestBody Map<String, String> form) {
 		if (!collegueRepo.findByEmail(form.get("email")).isPresent()) {
