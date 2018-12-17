@@ -3,6 +3,8 @@ package dev.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.Where;
+import org.hibernate.hql.internal.classic.WhereParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,7 +34,22 @@ public class ProduitController {
 		return this.produitRepo.findAll();
 	}
 	
-	
+	// Envoie d'un nouveau produit en BDD
+    @Secured(value = { "ROLE_ADMINISTRATEUR" })
+    @PostMapping
+    public Produit createProduit(@RequestBody Produit ajoutProd) {
+        Produit ajPro = new Produit();
+        ajPro.setNomSaga(ajoutProd.getNomSaga());
+        ajPro.setNomImage(ajoutProd.getNomImage());
+        ajPro.setPersonnage(ajoutProd.getPersonnage());
+        ajPro.setNomFigurine(ajoutProd.getNomFigurine());
+        ajPro.setTaille(ajoutProd.getTaille());
+        ajPro.setDescription(ajoutProd.getDescription());
+        ajPro.setNumeroFigurine(ajoutProd.getNumeroFigurine());
+        this.produitRepo.save(ajPro);
+        return ajPro;
+    }
+    
 	// Modifier Les produits
 	@Secured(value = { "ROLE_ADMINISTRATEUR" })
 	@PatchMapping("/{nomFigurine}")
@@ -60,31 +77,30 @@ public class ProduitController {
 	public List<Produit> recherche(@RequestParam String nomSaga, @RequestParam String personnage) {
 		
 		//Recherche solo la saga
-		
 		if (!nomSaga.isEmpty() && personnage.isEmpty()) {
 		return	produitRepo.findAll(Recherche.triSaga(nomSaga));
-			
+
 		}
-		
 		
 		//recherche solo le personnage
 		if (nomSaga.isEmpty() && !personnage.isEmpty()) {
 			return produitRepo.findAll(Recherche.triPersonnage(personnage));
 		}
-		//recherche les deux 
-		if (!nomSaga.isEmpty() && !personnage.isEmpty()) {
-			List<Produit> l = new ArrayList<Produit>(); 
-			l.addAll(produitRepo.findAll(Recherche.triPersonnage(personnage)));
-			l.addAll(produitRepo.findAll(Recherche.triSaga(nomSaga)));
-			return l;
-		}
 		else {
 			return null;
 		}
-		
-	}
-
+}
 	
-	}
-
-
+//	@GetMapping("/recherche")
+//public List<Produit> rechercheTous(@RequestParam String search, String nomSaga, String personnage ) {
+//
+//	if (!nomSaga.isEmpty() && !personnage.isEmpty()) {
+//		List<Produit> l = produitRepo.findAll(Recherche.triPersonnage(personnage).or(Recherche.triSaga(nomSaga))); 
+//		search.contentEquals()
+//		return l;
+//	}
+//	else {
+//		return null;
+//	}
+//	}
+}
