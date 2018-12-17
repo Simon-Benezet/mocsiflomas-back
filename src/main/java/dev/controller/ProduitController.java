@@ -34,7 +34,7 @@ import services.Recherche;
 
 @CrossOrigin
 @RestController()
-@RequestMapping()
+@RequestMapping("/produits")
 public class ProduitController {
 
 	@Autowired
@@ -44,14 +44,14 @@ public class ProduitController {
 	private ServletContext servletContext;
 
 	// Récupération de tous les produits
-	@GetMapping("/produits")
+	@GetMapping("/liste-produits")
 	public List<Produit> findAll() {
 		return this.produitRepo.findAll();
 	}
 
 	// Envoie d'un nouveau produit en BDD
 	@Secured(value = { "ROLE_ADMINISTRATEUR" })
-	@PostMapping("/ajoutProduit/nouveau")
+	@PostMapping("/ajout-produit")
 	public Produit createProduit(@RequestBody Produit ajoutProd) {
 		this.produitRepo.save(ajoutProd);
 		return ajoutProd;
@@ -59,7 +59,7 @@ public class ProduitController {
 
 	// Modifier un produit en BDD
 	@Secured(value = { "ROLE_ADMINISTRATEUR" })
-	@PatchMapping("/{nomFigurine}")
+	@PatchMapping("/modif-produit/{nomFigurine}")
 	public Produit modif(@PathVariable String nomFigurine, @RequestBody Produit prod) {
 		Produit produit = this.produitRepo.findByNomFigurine(nomFigurine);
 		prod.setId(produit.getId());
@@ -101,7 +101,7 @@ public class ProduitController {
 
 	}
 
-	@GetMapping("/ajoutProduit/upload/{fileName}")
+	@GetMapping("/upload/{fileName}")
 	public ResponseEntity<InputStreamResource> returnImage(@PathVariable(name = "fileName") String fileName)
 			throws IOException {
 		MediaType mediaType = getMediaTypeForFileName(this.servletContext, fileName);
@@ -115,7 +115,7 @@ public class ProduitController {
 				.contentType(mediaType).contentLength(file.length()).body(ressource);
 	}
 
-	@PostMapping("/ajoutProduit/upload/{fileName}")
+	@PostMapping("/upload/{fileName}")
 	public ResponseEntity<?> uploadImage(@PathVariable(name = "fileName") String fileName, @RequestBody byte[] val) {
 		try {
 			Path path = Paths.get("C:/Temp/images/" + fileName);
