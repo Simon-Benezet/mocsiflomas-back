@@ -1,9 +1,13 @@
 package services;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
 import dev.domain.Produit;
-
+@Service
+@Transactional
 public interface Recherche {
 
 	public static Specification<Produit> triSaga(String nomSaga) {
