@@ -27,6 +27,9 @@ public class Collegue {
     private LocalDate dateDeNaissance;
     
     private String imgUrl;
+    
+    @OneToMany(mappedBy = "comClient", cascade = CascadeType.PERSIST)
+    private Commande maCommande;
 
     @OneToMany(mappedBy = "collegue", cascade = CascadeType.PERSIST)
     private List<RoleCollegue> roles;

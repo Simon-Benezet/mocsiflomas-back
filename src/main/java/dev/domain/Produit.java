@@ -3,6 +3,8 @@ package dev.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Produit {
@@ -17,6 +19,10 @@ public class Produit {
 	float prix;
 	String description;
 	int numeroFigurine;
+	
+	@ManyToOne
+    @JoinColumn(name = "commande_id")
+    private Commande com_com;
 	
 	public Produit() {
 		

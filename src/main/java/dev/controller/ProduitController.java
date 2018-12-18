@@ -100,6 +100,8 @@ public class ProduitController {
 		}
 
 	}
+	
+
 
 	@GetMapping("/upload/{fileName}")
 	public ResponseEntity<InputStreamResource> returnImage(@PathVariable(name = "fileName") String fileName)
