@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +35,7 @@ import services.Recherche;
 
 @CrossOrigin
 @RestController()
-@RequestMapping("/produits")
+@RequestMapping("/gestion-produit")
 public class ProduitController {
 
 	@Autowired
@@ -51,7 +52,7 @@ public class ProduitController {
 
 	// Envoie d'un nouveau produit en BDD
 	@Secured(value = { "ROLE_ADMINISTRATEUR" })
-	@PostMapping("/ajout-produit")
+	@PostMapping("/creer")
 	public Produit createProduit(@RequestBody Produit ajoutProd) {
 		this.produitRepo.save(ajoutProd);
 		return ajoutProd;
@@ -73,6 +74,11 @@ public class ProduitController {
 		Produit coco = this.produitRepo.findByNomFigurine(nomFigurine);
 		return coco;
 	}
+	
+	@DeleteMapping(path="/{nomFigurine}")
+	public void deleteProduit (@PathVariable String nomFigurine) {
+		produitRepo.delete(this.produitRepo.findByNomFigurine(nomFigurine));
+	}
 
 	// filtre
 	@GetMapping("/recherche")
@@ -82,7 +88,6 @@ public class ProduitController {
 
 		if (!nomSaga.isEmpty() && personnage.isEmpty()) {
 			return produitRepo.findAll(Recherche.triSaga(nomSaga));
-
 		}
 
 		// recherche solo le personnage
