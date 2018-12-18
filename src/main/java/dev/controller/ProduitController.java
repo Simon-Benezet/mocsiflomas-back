@@ -126,7 +126,7 @@ public class ProduitController {
 			Path path = Paths.get("C:/Temp/images/" + fileName);
 			Files.write(path, val);
 
-			return ResponseEntity.status(HttpStatus.OK).body("http://localhost:8080/ajoutProduit/upload/" + fileName);
+			return ResponseEntity.status(HttpStatus.OK).body("http://localhost:8080/gestion-produit/upload/" + fileName);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("coucou");
