@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.servlet.ServletContext;
 
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.domain.Produit;
 import dev.repository.ProduitRepo;
+import dev.utils.StringUtils;
 import services.Recherche;
 
 @CrossOrigin
@@ -54,6 +56,11 @@ public class ProduitController {
 	@Secured(value = { "ROLE_ADMINISTRATEUR" })
 	@PostMapping("/creer")
 	public Produit createProduit(@RequestBody Produit ajoutProd) {
+		for (Produit p : this.produitRepo.findAll()) {
+			if(p.getNomFigurine().equals(ajoutProd.getNomFigurine())) {
+				return null;
+			}
+		}
 		this.produitRepo.save(ajoutProd);
 		return ajoutProd;
 	}
@@ -62,9 +69,15 @@ public class ProduitController {
 	@Secured(value = { "ROLE_ADMINISTRATEUR" })
 	@PatchMapping("/modif-produit/{nomFigurine}")
 	public Produit modif(@PathVariable String nomFigurine, @RequestBody Produit prod) {
-		Produit produit = this.produitRepo.findByNomFigurine(nomFigurine);
-		prod.setId(produit.getId());
-		this.produitRepo.save(prod);
+		Produit prodBase = this.produitRepo.findByNomFigurine(nomFigurine);
+		prodBase.setNomFigurine(StringUtils.choisirValeurString(prodBase.getNomFigurine(), prod.getNomFigurine()));
+		prodBase.setNomSaga(StringUtils.choisirValeurString(prodBase.getNomSaga(), prod.getNomSaga()));
+		prodBase.setDescription(StringUtils.choisirValeurString(prodBase.getDescription(), prod.getDescription()));
+		prodBase.setNomImage(StringUtils.choisirValeurString(prodBase.getNomImage(), prod.getNomImage()));
+		prodBase.setNumeroFigurine(StringUtils.choisirValeurInt(prodBase.getNumeroFigurine(), prod.getNumeroFigurine()));
+		prodBase.setPersonnage(StringUtils.choisirValeurString(prodBase.getPersonnage(), prod.getPersonnage()));
+		prodBase.setTaille(StringUtils.choisirValeurFloat(prodBase.getTaille(), prod.getTaille()));
+		this.produitRepo.save(prodBase);
 		return prod;
 	}
 
@@ -74,9 +87,9 @@ public class ProduitController {
 		Produit coco = this.produitRepo.findByNomFigurine(nomFigurine);
 		return coco;
 	}
-	
-	@DeleteMapping(path="/{nomFigurine}")
-	public void deleteProduit (@PathVariable String nomFigurine) {
+
+	@DeleteMapping(path = "/supprimer/{nomFigurine}")
+	public void deleteProduit(@PathVariable String nomFigurine) {
 		produitRepo.delete(this.produitRepo.findByNomFigurine(nomFigurine));
 	}
 
@@ -103,7 +116,6 @@ public class ProduitController {
 		} else {
 			return null;
 		}
-
 	}
 
 	@GetMapping("/upload/{fileName}")
@@ -126,7 +138,8 @@ public class ProduitController {
 			Path path = Paths.get("C:/Temp/images/" + fileName);
 			Files.write(path, val);
 
-			return ResponseEntity.status(HttpStatus.OK).body("http://localhost:8080/gestion-produit/upload/" + fileName);
+			return ResponseEntity.status(HttpStatus.OK)
+					.body("http://localhost:8080/gestion-produit/upload/" + fileName);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("coucou");
