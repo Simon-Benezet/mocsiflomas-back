@@ -1,20 +1,28 @@
 package dev;
 
-import dev.domain.Collegue;
-import dev.domain.Produit;
-import dev.domain.Role;
-import dev.domain.RoleCollegue;
-import dev.domain.Version;
-import dev.repository.CollegueRepo;
-import dev.repository.ProduitRepo;
-import dev.repository.VersionRepo;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import dev.domain.Achat;
+import dev.domain.Collegue;
+import dev.domain.Commande;
+import dev.domain.Produit;
+import dev.domain.Role;
+import dev.domain.RoleCollegue;
+import dev.domain.Version;
+import dev.repository.AchatRepo;
+import dev.repository.CollegueRepo;
+import dev.repository.CommandeRepo;
+import dev.repository.ProduitRepo;
+import dev.repository.VersionRepo;
 
 /**
  * Code de démarrage de l'application.
@@ -28,13 +36,17 @@ public class StartupListener {
     private PasswordEncoder passwordEncoder;
     private CollegueRepo collegueRepo;
     private ProduitRepo produitRepo;
+    private CommandeRepo commandeRepo;
+    private AchatRepo achatRepo;
 
-    public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo, PasswordEncoder passwordEncoder, CollegueRepo collegueRepo, ProduitRepo produitRepo) {
+    public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo, PasswordEncoder passwordEncoder, CollegueRepo collegueRepo, ProduitRepo produitRepo, CommandeRepo commandeRepo,AchatRepo achatRepo) {
         this.appVersion = appVersion;
         this.versionRepo = versionRepo;
         this.passwordEncoder = passwordEncoder;
         this.collegueRepo = collegueRepo;
         this.produitRepo = produitRepo;
+        this.commandeRepo = commandeRepo;
+        this.achatRepo =achatRepo;
     }
 
     @EventListener(ContextRefreshedEvent.class)
@@ -80,6 +92,21 @@ public class StartupListener {
         prod2.setDescription("bbbbbbbbbbbbbbbbbbbbbbbb");
         prod2.setNumeroFigurine(2);
         this.produitRepo.save(prod2);
-    }
+        
 
+        Commande com1 = new Commande();
+        com1.setNumeroCommande(1);
+        com1.setDateCommande(LocalDate.parse("2001-01-01"));
+        com1.setComClient(col2);
+        this.commandeRepo.save(com1);
+        
+        Achat ach1=new Achat(prod1, 2,com1);
+        Achat ach2=new Achat(prod2, 1, com1);
+        this.achatRepo.save(ach1);
+        this.achatRepo.save(ach2);
+        
+    }
+    
+    
+    
 }

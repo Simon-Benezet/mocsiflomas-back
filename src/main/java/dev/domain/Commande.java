@@ -1,15 +1,16 @@
 package dev.domain;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import java.util.List;
 
 @Entity
 public class Commande {
@@ -20,32 +21,53 @@ public class Commande {
 	
     private LocalDate dateCommande;
     
-	private int numeroCommande;
+	private Integer numero;
+	
+	@OneToMany(mappedBy="commande", cascade = CascadeType.PERSIST)
+	//@JoinColumn(name = "commande_id")
+	List<Achat> achat;
 	
 	@ManyToOne
 	Collegue comClient;
 	
-    @OneToMany(mappedBy = "", cascade = CascadeType.PERSIST)
-    private List<Produit> comProduit;
-
-    
+//    @ManyToMany(mappedBy = "com_com")
+//    		//, cascade = CascadeType.PERSIST)
+//    @ElementCollection(targetClass=Produit.class)
+//    private Map<Produit, Integer> comProduit = new HashMap<Produit, Integer>();
+    		
     public Commande() { }
     
 
-	public Commande(LocalDate dateCommande, int numeroCommande, Collegue comClient, List<Produit> comProduit) {
+	/**
+	 * Constructeur
+	 * @param dateCommande 
+	 * @param numeroCommande
+	 * @param comClient
+	 * @param comProduit
+	 */
+	public Commande(LocalDate dateCommande, int numero, Collegue comClient) {
 		super();
 		this.dateCommande = dateCommande;
-		this.numeroCommande = numeroCommande;
+		this.numero = numero;
 		this.comClient = comClient;
-		this.comProduit = comProduit;
 	}
 
 
     
     //VOICI LES GETTERS SETTERS
 
+	
+	public List<Achat> getAchat() {
+		return achat;
+	}
 
 
+	public void setAchat(List<Achat> achat) {
+		this.achat = achat;
+	}
+
+	
+	
 	public Long getId() {
 		return id;
 	}
@@ -62,11 +84,11 @@ public class Commande {
 	}
 
 	public int getNumeroCommande() {
-		return numeroCommande;
+		return numero;
 	}
 
-	public void setNumeroCommande(int numeroCommande) {
-		this.numeroCommande = numeroCommande;
+	public void setNumeroCommande(int numero) {
+		this.numero = numero;
 	}
 
 	public Collegue getComClient() {
@@ -77,15 +99,5 @@ public class Commande {
 		this.comClient = comClient;
 	}
 
-	public List<Produit> getComProduit() {
-		return comProduit;
-	}
 
-	public void setComProduit(List<Produit> comProduit) {
-		this.comProduit = comProduit;
-	}
-	
-	
-	
-	
 }

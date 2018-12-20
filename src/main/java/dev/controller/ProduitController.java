@@ -49,7 +49,11 @@ public class ProduitController {
 		return this.produitRepo.findAll();
 	}
 
-	// Envoie d'un nouveau produit en BDD
+	
+	/** Envoi d'un nouveau produit en BDD
+	 * @param ajoutProd : un nouveau produit
+	 * @return le produit est ajouté dans la base de données
+	 */
 	@Secured(value = { "ROLE_ADMINISTRATEUR" })
 	@PostMapping("/ajout-produit")
 	public Produit createProduit(@RequestBody Produit ajoutProd) {
@@ -57,15 +61,20 @@ public class ProduitController {
 		return ajoutProd;
 	}
 
-	// Modifier un produit en BDD
-	@Secured(value = { "ROLE_ADMINISTRATEUR" })
-	@PatchMapping("/modif-produit/{nomFigurine}")
-	public Produit modif(@PathVariable String nomFigurine, @RequestBody Produit prod) {
-		Produit produit = this.produitRepo.findByNomFigurine(nomFigurine);
-		prod.setId(produit.getId());
-		this.produitRepo.save(prod);
-		return prod;
-	}
+	
+	/** Modifier un produit en BDD
+	 * @param nomFigurine : ce paramètre sert à retrouver un produit en particulier grâce à son nom
+	 * @param prod : Le produit qui sera modifié
+	 * @return Les changements ajoutées 
+	 */
+//	@Secured(value = { "ROLE_ADMINISTRATEUR" })
+//	@PatchMapping("/modif-produit/{nomFigurine}")
+//	public Produit modif(@PathVariable String nomFigurine, @RequestBody Produit prod) {
+//		Produit produit = this.produitRepo.findByNomFigurine(nomFigurine);
+//		prod.setId(produit.getId());
+//		this.produitRepo.save(prod);
+//		return prod;
+//	}
 
 	// Trouver un produit en fonction de son nom de figurine
 	@GetMapping("/{nomFigurine}")

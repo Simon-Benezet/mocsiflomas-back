@@ -28,8 +28,8 @@ public class Collegue {
     
     private String imgUrl;
     
-    @OneToMany(mappedBy = "comClient", cascade = CascadeType.PERSIST)
-    private Commande maCommande;
+    @ManyToMany(mappedBy = "comClient", cascade = CascadeType.PERSIST)
+    private List<Commande> maCommande;
 
     @OneToMany(mappedBy = "collegue", cascade = CascadeType.PERSIST)
     private List<RoleCollegue> roles;
