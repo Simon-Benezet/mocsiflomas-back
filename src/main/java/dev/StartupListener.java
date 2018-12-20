@@ -37,14 +37,14 @@ public class StartupListener {
 	private AchatRepo achatRepo;
 
 	public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo,
-			PasswordEncoder passwordEncoder, CollegueRepo collegueRepo, ProduitRepo produitRepo, CommandeRepo commandeRepo,AchatRepo achatRepo) {
+			PasswordEncoder passwordEncoder, CollegueRepo collegueRepo, ProduitRepo produitRepo, CommandeRepo commandeRepo, AchatRepo achatRepo) {
 		this.appVersion = appVersion;
 		this.versionRepo = versionRepo;
 		this.passwordEncoder = passwordEncoder;
 		this.collegueRepo = collegueRepo;
 		this.produitRepo = produitRepo;
 		this.commandeRepo = commandeRepo;
-		this.achatRepo= achatRepo;
+		this.achatRepo = achatRepo;
 	}
 
 	@EventListener(ContextRefreshedEvent.class)
@@ -97,6 +97,8 @@ public class StartupListener {
 		
 		}
 	    
+		
+	
 			Commande com1 = new Commande();
 	        com1.setNumeroCommande(1);
 	        com1.setDateCommande(LocalDate.parse("2001-01-01"));
@@ -107,15 +109,10 @@ public class StartupListener {
 	        Achat ach2=new Achat(this.produitRepo.findByNomFigurine("HarryPop"), 1, com1);
 	        this.achatRepo.save(ach1);
 	        this.achatRepo.save(ach2);
-//			
-		
+			
+			
 		
 		
 		}
-
-        
-        
-    
-	
 
 }
