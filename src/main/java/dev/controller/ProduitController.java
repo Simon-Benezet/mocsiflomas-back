@@ -165,13 +165,5 @@ public class ProduitController {
 		}
 	}
 	
-	// delete produit :
-	
-			@DeleteMapping(path="/{nomFigurine}")
-			public void deleteProduit (@PathVariable String nomFigurine) {
-				
-		  produitRepo.delete(this.produitRepo.findByNomFigurine(nomFigurine)); 
-		     
-			}
 	
 }
