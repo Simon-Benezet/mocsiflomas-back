@@ -17,6 +17,7 @@ public class Produit {
 	float prix;
 	String description;
 	int numeroFigurine;
+	boolean statut ; 
 	
 	public Produit() {
 		
