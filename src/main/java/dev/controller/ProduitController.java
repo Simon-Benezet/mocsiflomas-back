@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import javax.servlet.ServletContext;
 
@@ -57,7 +56,7 @@ public class ProduitController {
 	@PostMapping("/creer")
 	public Produit createProduit(@RequestBody Produit ajoutProd) {
 		for (Produit p : this.produitRepo.findAll()) {
-			if(p.getNomFigurine().equals(ajoutProd.getNomFigurine())) {
+			if (p.getNomFigurine().equals(ajoutProd.getNomFigurine())) {
 				return null;
 			}
 		}
@@ -74,7 +73,8 @@ public class ProduitController {
 		prodBase.setNomSaga(StringUtils.choisirValeurString(prodBase.getNomSaga(), prod.getNomSaga()));
 		prodBase.setDescription(StringUtils.choisirValeurString(prodBase.getDescription(), prod.getDescription()));
 		prodBase.setNomImage(StringUtils.choisirValeurString(prodBase.getNomImage(), prod.getNomImage()));
-		prodBase.setNumeroFigurine(StringUtils.choisirValeurInt(prodBase.getNumeroFigurine(), prod.getNumeroFigurine()));
+		prodBase.setNumeroFigurine(
+				StringUtils.choisirValeurInt(prodBase.getNumeroFigurine(), prod.getNumeroFigurine()));
 		prodBase.setPersonnage(StringUtils.choisirValeurString(prodBase.getPersonnage(), prod.getPersonnage()));
 		prodBase.setTaille(StringUtils.choisirValeurFloat(prodBase.getTaille(), prod.getTaille()));
 		this.produitRepo.save(prodBase);

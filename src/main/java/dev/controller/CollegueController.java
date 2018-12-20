@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -23,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,11 +30,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.controller.vm.CollegueVM;
 import dev.domain.Collegue;
-import dev.domain.Produit;
 import dev.domain.Role;
 import dev.domain.RoleCollegue;
-import dev.exception.ClientErrorInformation;
 import dev.exception.FunctionalException;
 import dev.repository.CollegueRepo;
 import dev.utils.StringUtils;
@@ -130,28 +127,25 @@ public class CollegueController extends AbstractController {
 			return MediaType.APPLICATION_OCTET_STREAM;
 		}
 	}
-	
-	/*
+/*
 	// Modifier un produit en BDD
 	@Secured(value = { "ROLE_ADMINISTRATEUR" })
 	@PatchMapping("/modif-produit/{nomFigurine}")
 	public Collegue modif(@PathVariable String email, @RequestBody Collegue col) {
-		Optional<Collegue> colBase = this.collegueRepo.findByEmail(email);
-		colBase.(StringUtils.choisirValeurString(prodBase.getNomFigurine(), prod.getNomFigurine()));
-		colBase.setNomSaga(StringUtils.choisirValeurString(prodBase.getNomSaga(), prod.getNomSaga()));
-		colBase.setDescription(StringUtils.choisirValeurString(prodBase.getDescription(), prod.getDescription()));
-		colBase.setNomImage(StringUtils.choisirValeurString(prodBase.getNomImage(), prod.getNomImage()));
-		colBase.setNumeroFigurine(
-				StringUtils.choisirValeurInt(prodBase.getNumeroFigurine(), prod.getNumeroFigurine()));
-		colBase.setPersonnage(StringUtils.choisirValeurString(prodBase.getPersonnage(), prod.getPersonnage()));
-		colBase.setTaille(StringUtils.choisirValeurFloat(prodBase.getTaille(), prod.getTaille()));
-		this.collegueRepo.save(colBase);
+		Optional<Collegue> colBase = this.collegueRepo.findByEmail(email).;
+		colBase.setAdresse(StringUtils.choisirValeurString(colBase.getAdresse(), col.getAdresse()));
+//		colBase.setDateDeNaissance(StringUtils.choisirValeurDate(colBase.getDateDeNaissance(), col.getDateDeNaissance());
+		colBase.setImgUrl(StringUtils.choisirValeurString(colBase.getImgUrl(), col.getImgUrl()));
+		colBase.setMotDePasse(StringUtils.choisirValeurString(colBase.getMotDePasse(), col.getMotDePasse()));
+		colBase.setNom(StringUtils.choisirValeurString(colBase.getNom(), col.getNom()));
+		colBase.setPrenom(StringUtils.choisirValeurString(colBase.getPrenom(), col.getPrenom()));
+		colBase.setTelephone(StringUtils.choisirValeurString(colBase.getTelephone(), col.getTelephone()));
 		return col;
 	}
 
 	@DeleteMapping(path = "/supprimer/{nomFigurine}")
-	public void deleteProduit(@PathVariable String nomFigurine) {
-		produitRepo.delete(this.produitRepo.findByNomFigurine(nomFigurine));
+	public void deleteCollegue(@PathVariable String email) {
+		collegueRepo.delete(this.collegueRepo.findByEmail(email));
 	}
-	*/
+*/
 }

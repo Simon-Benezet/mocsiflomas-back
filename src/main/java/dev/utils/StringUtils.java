@@ -1,5 +1,7 @@
 package dev.utils;
 
+import java.time.LocalDate;
+
 public class StringUtils {
 
 	public static String choisirValeurString(String valeurBase, String valeurVue) {
@@ -11,6 +13,10 @@ public class StringUtils {
 	}
 	
 	public static int choisirValeurInt(int valeurBase, int valeurVue) {
+		return valeurVue != valeurBase ? valeurVue : valeurBase;
+	}
+
+	public static LocalDate choisirValeurDate(LocalDate valeurBase, LocalDate valeurVue) {
 		return valeurVue != valeurBase ? valeurVue : valeurBase;
 	}
 }
