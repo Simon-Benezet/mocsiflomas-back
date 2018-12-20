@@ -51,7 +51,11 @@ public class ProduitController {
 		return this.produitRepo.findAll();
 	}
 
-	// Envoie d'un nouveau produit en BDD
+	
+	/** Envoi d'un nouveau produit en BDD
+	 * @param ajoutProd : un nouveau produit
+	 * @return le produit est ajouté dans la base de données
+	 */
 	@Secured(value = { "ROLE_ADMINISTRATEUR" })
 	@PostMapping("/creer")
 	public Produit createProduit(@RequestBody Produit ajoutProd) {
@@ -117,6 +121,8 @@ public class ProduitController {
 			return null;
 		}
 	}
+	
+
 
 	@GetMapping("/upload/{fileName}")
 	public ResponseEntity<InputStreamResource> returnImage(@PathVariable(name = "fileName") String fileName)
@@ -158,4 +164,6 @@ public class ProduitController {
 			return MediaType.APPLICATION_OCTET_STREAM;
 		}
 	}
+	
+	
 }

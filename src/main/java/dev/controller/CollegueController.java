@@ -1,3 +1,4 @@
+
 package dev.controller;
 
 import java.io.File;
@@ -36,7 +37,6 @@ import dev.domain.Role;
 import dev.domain.RoleCollegue;
 import dev.exception.FunctionalException;
 import dev.repository.CollegueRepo;
-import dev.utils.StringUtils;
 
 @RestController
 @RequestMapping("/collegue")
