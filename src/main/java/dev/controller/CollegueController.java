@@ -10,8 +10,10 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -19,8 +21,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,13 +34,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.domain.Collegue;
+import dev.domain.Produit;
 import dev.domain.Role;
 import dev.domain.RoleCollegue;
+import dev.exception.ClientErrorInformation;
+import dev.exception.FunctionalException;
 import dev.repository.CollegueRepo;
+import dev.utils.StringUtils;
 
 @RestController
 @RequestMapping("/collegue")
-public class CollegueController {
+public class CollegueController extends AbstractController {
 
 	@Autowired
 	private CollegueRepo collegueRepo;
@@ -80,7 +90,7 @@ public class CollegueController {
 
 	// crée nouveau client
 	@PostMapping("/nouveau")
-	public ResponseEntity create(@RequestBody Map<String, String> form) {
+	public void create(@RequestBody Map<String, String> form) throws FunctionalException {
 		if (!collegueRepo.findByEmail(form.get("email")).isPresent()) {
 			Collegue collegue = new Collegue();
 			collegue.setNom(form.get("nom"));
@@ -89,7 +99,9 @@ public class CollegueController {
 			collegue.setAdresse(form.get("adresse"));
 			collegue.setTelephone(form.get("phone"));
 			collegue.setMotDePasse(passwordEncoder.encode(form.get("password")));
-			collegue.setDateDeNaissance(LocalDate.parse(form.get("date")));
+			if (form.get("date") != null) {
+				collegue.setDateDeNaissance(LocalDate.parse(form.get("date")));
+			}
 			if (form.get("imgProfil") != null) {
 				collegue.setImgUrl(form.get("imgProfil"));
 			} else {
@@ -98,12 +110,12 @@ public class CollegueController {
 			collegue.setRoles(Arrays.asList(new RoleCollegue(collegue, Role.ROLE_UTILISATEUR)));
 			collegueRepo.save(collegue);
 			if (collegueRepo.findByEmail(collegue.getEmail()) != null) {
-				return ResponseEntity.status(HttpStatus.OK).body("Compte client céer");
+
 			} else {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Echec enregistrement");
+				throw new FunctionalException("Echec enregistrement");
 			}
 		} else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email deja existant");
+			throw new FunctionalException("Email deja existant");
 		}
 	}
 
@@ -119,5 +131,28 @@ public class CollegueController {
 			return MediaType.APPLICATION_OCTET_STREAM;
 		}
 	}
+	
+	/*
+	// Modifier un produit en BDD
+	@Secured(value = { "ROLE_ADMINISTRATEUR" })
+	@PatchMapping("/modif-produit/{nomFigurine}")
+	public Collegue modif(@PathVariable String email, @RequestBody Collegue col) {
+		Optional<Collegue> colBase = this.collegueRepo.findByEmail(email);
+		colBase.(StringUtils.choisirValeurString(prodBase.getNomFigurine(), prod.getNomFigurine()));
+		colBase.setNomSaga(StringUtils.choisirValeurString(prodBase.getNomSaga(), prod.getNomSaga()));
+		colBase.setDescription(StringUtils.choisirValeurString(prodBase.getDescription(), prod.getDescription()));
+		colBase.setNomImage(StringUtils.choisirValeurString(prodBase.getNomImage(), prod.getNomImage()));
+		colBase.setNumeroFigurine(
+				StringUtils.choisirValeurInt(prodBase.getNumeroFigurine(), prod.getNumeroFigurine()));
+		colBase.setPersonnage(StringUtils.choisirValeurString(prodBase.getPersonnage(), prod.getPersonnage()));
+		colBase.setTaille(StringUtils.choisirValeurFloat(prodBase.getTaille(), prod.getTaille()));
+		this.collegueRepo.save(colBase);
+		return col;
+	}
 
+	@DeleteMapping(path = "/supprimer/{nomFigurine}")
+	public void deleteProduit(@PathVariable String nomFigurine) {
+		produitRepo.delete(this.produitRepo.findByNomFigurine(nomFigurine));
+	}
+	*/
 }

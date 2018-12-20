@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.servlet.ServletContext;
 
@@ -19,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,11 +32,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.domain.Produit;
 import dev.repository.ProduitRepo;
+import dev.utils.StringUtils;
 import services.Recherche;
 
 @CrossOrigin
 @RestController()
-@RequestMapping("/produits")
+@RequestMapping("/gestion-produit")
 public class ProduitController {
 
 	@Autowired
@@ -55,32 +58,43 @@ public class ProduitController {
 	 * @return le produit est ajouté dans la base de données
 	 */
 	@Secured(value = { "ROLE_ADMINISTRATEUR" })
-	@PostMapping("/ajout-produit")
+	@PostMapping("/creer")
 	public Produit createProduit(@RequestBody Produit ajoutProd) {
+		for (Produit p : this.produitRepo.findAll()) {
+			if(p.getNomFigurine().equals(ajoutProd.getNomFigurine())) {
+				return null;
+			}
+		}
 		this.produitRepo.save(ajoutProd);
 		return ajoutProd;
 	}
 
-	
-	/** Modifier un produit en BDD
-	 * @param nomFigurine : ce paramètre sert à retrouver un produit en particulier grâce à son nom
-	 * @param prod : Le produit qui sera modifié
-	 * @return Les changements ajoutées 
-	 */
-//	@Secured(value = { "ROLE_ADMINISTRATEUR" })
-//	@PatchMapping("/modif-produit/{nomFigurine}")
-//	public Produit modif(@PathVariable String nomFigurine, @RequestBody Produit prod) {
-//		Produit produit = this.produitRepo.findByNomFigurine(nomFigurine);
-//		prod.setId(produit.getId());
-//		this.produitRepo.save(prod);
-//		return prod;
-//	}
+	// Modifier un produit en BDD
+	@Secured(value = { "ROLE_ADMINISTRATEUR" })
+	@PatchMapping("/modif-produit/{nomFigurine}")
+	public Produit modif(@PathVariable String nomFigurine, @RequestBody Produit prod) {
+		Produit prodBase = this.produitRepo.findByNomFigurine(nomFigurine);
+		prodBase.setNomFigurine(StringUtils.choisirValeurString(prodBase.getNomFigurine(), prod.getNomFigurine()));
+		prodBase.setNomSaga(StringUtils.choisirValeurString(prodBase.getNomSaga(), prod.getNomSaga()));
+		prodBase.setDescription(StringUtils.choisirValeurString(prodBase.getDescription(), prod.getDescription()));
+		prodBase.setNomImage(StringUtils.choisirValeurString(prodBase.getNomImage(), prod.getNomImage()));
+		prodBase.setNumeroFigurine(StringUtils.choisirValeurInt(prodBase.getNumeroFigurine(), prod.getNumeroFigurine()));
+		prodBase.setPersonnage(StringUtils.choisirValeurString(prodBase.getPersonnage(), prod.getPersonnage()));
+		prodBase.setTaille(StringUtils.choisirValeurFloat(prodBase.getTaille(), prod.getTaille()));
+		this.produitRepo.save(prodBase);
+		return prod;
+	}
 
 	// Trouver un produit en fonction de son nom de figurine
 	@GetMapping("/{nomFigurine}")
 	public Produit trouverProd(@PathVariable String nomFigurine) {
 		Produit coco = this.produitRepo.findByNomFigurine(nomFigurine);
 		return coco;
+	}
+
+	@DeleteMapping(path = "/supprimer/{nomFigurine}")
+	public void deleteProduit(@PathVariable String nomFigurine) {
+		produitRepo.delete(this.produitRepo.findByNomFigurine(nomFigurine));
 	}
 
 	// filtre
@@ -91,7 +105,6 @@ public class ProduitController {
 
 		if (!nomSaga.isEmpty() && personnage.isEmpty()) {
 			return produitRepo.findAll(Recherche.triSaga(nomSaga));
-
 		}
 
 		// recherche solo le personnage
@@ -107,7 +120,6 @@ public class ProduitController {
 		} else {
 			return null;
 		}
-
 	}
 	
 
@@ -132,7 +144,8 @@ public class ProduitController {
 			Path path = Paths.get("C:/Temp/images/" + fileName);
 			Files.write(path, val);
 
-			return ResponseEntity.status(HttpStatus.OK).body("http://localhost:8080/ajoutProduit/upload/" + fileName);
+			return ResponseEntity.status(HttpStatus.OK)
+					.body("http://localhost:8080/gestion-produit/upload/" + fileName);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("coucou");
