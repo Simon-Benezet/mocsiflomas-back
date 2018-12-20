@@ -2,23 +2,40 @@ package dev.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Produit {
 	@Id
-	@GeneratedValue
-	Integer id;
-	String nomSaga;
-	String nomImage;
-	String personnage;
-	String nomFigurine;
-	float taille;
-	float prix;
-	String description;
-	int numeroFigurine;
-	boolean statut ; 
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+	private String nomSaga;
+	private String nomImage;
+	private String personnage;
+	private String nomFigurine;
+	private float taille;
+	private float prix;
+	private String description;
+	private int numeroFigurine;
 	
+////	@OneToMany
+//////    @JoinColumn(name = "commande_id")
+////    private Commande com_com;
+//	
+//	
+//	
+//	
+//	public Commande getCom_com() {
+//		return com_com;
+//	}
+//
+//	public void setCom_com(Commande com_com) {
+//		this.com_com = com_com;
+//	}
+
 	public Produit() {
 		
 	}
@@ -36,11 +53,11 @@ public class Produit {
 		this.numeroFigurine = numeroFigurine;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
