@@ -37,13 +37,14 @@ public class StartupListener {
 	private AchatRepo achatRepo;
 
 	public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo,
-			PasswordEncoder passwordEncoder, CollegueRepo collegueRepo, ProduitRepo produitRepo, CommandeRepo commandeRepo) {
+			PasswordEncoder passwordEncoder, CollegueRepo collegueRepo, ProduitRepo produitRepo, CommandeRepo commandeRepo,AchatRepo achatRepo) {
 		this.appVersion = appVersion;
 		this.versionRepo = versionRepo;
 		this.passwordEncoder = passwordEncoder;
 		this.collegueRepo = collegueRepo;
 		this.produitRepo = produitRepo;
 		this.commandeRepo = commandeRepo;
+		this.achatRepo= achatRepo;
 	}
 
 	@EventListener(ContextRefreshedEvent.class)
@@ -96,23 +97,17 @@ public class StartupListener {
 		
 		}
 	    
-//		if (this.commandeRepo.findAll().isEmpty()) {
-//
-//		
-//	
-//			Commande com1 = new Commande();
-//	        com1.setNumeroCommande(1);
-//	        com1.setDateCommande(LocalDate.parse("2001-01-01"));
-//	        com1.setComClient(this.collegueRepo.findByNom("User"));
-//	        this.commandeRepo.save(com1);
-//	        
-//	        Achat ach1=new Achat(this.produitRepo.findByNomFigurine("RonPop"), 2,com1);
-//	        Achat ach2=new Achat(this.produitRepo.findByNomFigurine("HarryPop"), 1, com1);
-//	        this.achatRepo.save(ach1);
-//	        this.achatRepo.save(ach2);
+			Commande com1 = new Commande();
+	        com1.setNumeroCommande(1);
+	        com1.setDateCommande(LocalDate.parse("2001-01-01"));
+	        com1.setComClient(this.collegueRepo.findByNom("User"));
+	        this.commandeRepo.save(com1);
+	        
+	        Achat ach1=new Achat(this.produitRepo.findByNomFigurine("RonPop"), 2,com1);
+	        Achat ach2=new Achat(this.produitRepo.findByNomFigurine("HarryPop"), 1, com1);
+	        this.achatRepo.save(ach1);
+	        this.achatRepo.save(ach2);
 //			
-//			
-//		}
 		
 		
 		
