@@ -127,6 +127,11 @@ public class CollegueController extends AbstractController {
 			return MediaType.APPLICATION_OCTET_STREAM;
 		}
 	}
+	
+	@GetMapping("/profil/{nom}")
+	public CollegueVM getCollegueByNom(@PathVariable(name = "nom") String nom){
+	 return new CollegueVM(this.collegueRepo.findByNom(nom));
+	}        
 /*
 	// Modifier un produit en BDD
 	@Secured(value = { "ROLE_ADMINISTRATEUR" })
