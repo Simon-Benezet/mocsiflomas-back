@@ -96,22 +96,16 @@ public class StartupListener {
 
 		
 		}
-	    
-		
-	
+	    	
 			Commande com1 = new Commande();
 	        com1.setNumeroCommande(1);
 	        com1.setDateCommande(LocalDate.parse("2001-01-01"));
 	        com1.setComClient(this.collegueRepo.findByNom("User"));
 	        this.commandeRepo.save(com1);
-	        
 	        Achat ach1=new Achat(this.produitRepo.findByNomFigurine("RonPop"), 2,com1);
 	        Achat ach2=new Achat(this.produitRepo.findByNomFigurine("HarryPop"), 1, com1);
 	        this.achatRepo.save(ach1);
 	        this.achatRepo.save(ach2);
-			
-			
-		
 		
 		}
 

@@ -91,6 +91,11 @@ public class ProduitController {
 		Produit coco = this.produitRepo.findByNomFigurine(nomFigurine);
 		return coco;
 	}
+	
+//	@GetMapping("/{nomFigurine}")
+//	public List<Produit> findBySaga(@PathVariable String nomSaga) {
+//		return this.produitRepo.findByNomSaga(nomSaga);
+//	}
 
 	@DeleteMapping(path = "/supprimer/{nomFigurine}")
 	public void deleteProduit(@PathVariable String nomFigurine) {
